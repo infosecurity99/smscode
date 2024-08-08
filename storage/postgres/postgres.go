@@ -18,9 +18,9 @@ import (
 )
 
 type Store struct {
-	pool  *pgxpool.Pool
-	log   logger.ILogger
-	cfg   config.Config
+	pool *pgxpool.Pool
+	log  logger.ILogger
+	cfg  config.Config
 }
 
 func New(ctx context.Context, cfg config.Config, log logger.ILogger) (storage.IStorage, error) {
@@ -48,7 +48,7 @@ func New(ctx context.Context, cfg config.Config, log logger.ILogger) (storage.IS
 	}
 
 	//migration
-	m, err := migrate.New("file://migrations/postgres/", url)
+	m, err := migrate.New("file:///home/zarif/Desktop/otpcode/migrations/postgres", url)
 	if err != nil {
 		log.Error("error while migrating", logger.Error(err))
 		return nil, err
@@ -56,7 +56,7 @@ func New(ctx context.Context, cfg config.Config, log logger.ILogger) (storage.IS
 
 	log.Info("???? came")
 
-	if err = m.Up(); err != nil {
+	if err = m.Down(); err != nil {
 		log.Warning("migration up", logger.Error(err))
 		if !strings.Contains(err.Error(), "no change") {
 			fmt.Println("entered")
@@ -82,9 +82,9 @@ func New(ctx context.Context, cfg config.Config, log logger.ILogger) (storage.IS
 	log.Info("!!!!! came here")
 
 	return Store{
-		pool:  pool,
-		log:   log,
-		cfg:   cfg,
+		pool: pool,
+		log:  log,
+		cfg:  cfg,
 	}, nil
 }
 
@@ -94,4 +94,8 @@ func (s Store) Close() {
 
 func (s Store) User() storage.IUserStorage {
 	return NewUserRepo(s.pool, s.log)
+}
+
+func (s Store) OTP() storage.IOTPStorage {
+	return NewOTPRepo(s.pool, s.log)
 }

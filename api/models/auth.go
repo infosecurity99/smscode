@@ -6,11 +6,11 @@ type AuthInfo struct {
 	UserRole string `json:"user_role"`
 }
 
-type AdminLoginRequest struct {
+type UserLoginRequest struct {
 	Login    string `json:"login"`
 	Password string `json:"password"`
 }
-type AdminLoginResponse struct {
+type UserLoginResponse struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 }

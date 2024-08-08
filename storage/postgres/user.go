@@ -28,7 +28,7 @@ func (u *userRepo) Create(ctx context.Context, createUser models.CreateUser) (st
 	uid := uuid.New()
 
 	if _, err := u.db.Exec(ctx, `insert into 
-			users (id, full_name, phone, password, login) values ($1, $2, $3, $4, $5)
+			users (id, full_name, phone, password, login) values ($1, $2, $3, $4)
 			`,
 		uid,
 		createUser.FullName,
@@ -149,7 +149,7 @@ func (u *userRepo) Update(ctx context.Context, request models.UpdateUser) (strin
 			set full_name = $1, phone = $2,  updated_at = now()
 				where and id = $3`
 
-	if _, err := u.db.Exec(ctx, query, request.FullName, request.Phone, request.Cash, request.ID); err != nil {
+	if _, err := u.db.Exec(ctx, query, request.FullName, request.Phone, request.ID); err != nil {
 		fmt.Println("error while updating user data", err.Error())
 		return "", err
 	}
@@ -198,7 +198,7 @@ func (u *userRepo) UpdatePassword(ctx context.Context, request models.UpdateUser
 }
 
 
-func (u *userRepo) GetAdminCredentialsByLogin(ctx context.Context, login string) (models.User, error) {
+func (u *userRepo) GetUserCredentialsByLogin(ctx context.Context, login string) (models.User, error) {
 	user := models.User{}
 
 	query := `

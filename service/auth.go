@@ -21,31 +21,29 @@ func NewAuthService(storage storage.IStorage, log logger.ILogger) authService {
 	}
 }
 
-
-
-func (a authService) AdminLogin(ctx context.Context, loginRequest models.AdminLoginRequest) (models.AdminLoginResponse, error) {
-	admin, err := a.storage.User().GetAdminCredentialsByLogin(ctx, loginRequest.Login)
+func (a authService) UserLogin(ctx context.Context, loginRequest models.UserLoginRequest) (models.UserLoginResponse, error) {
+	user, err := a.storage.User().GetUserCredentialsByLogin(ctx, loginRequest.Login)
 	if err != nil {
-		a.log.Error("error is while getting admin", logger.Error(err))
-		return models.AdminLoginResponse{}, err
+		a.log.Error("error is while getting user", logger.Error(err))
+		return models.UserLoginResponse{}, err
 	}
 
-	if err := security.CompareHashAndPassword(admin.Password, loginRequest.Password); err != nil {
+	if err := security.CompareHashAndPassword(user.Password, loginRequest.Password); err != nil {
 		a.log.Error("password is incorrect", logger.Error(err))
-		return models.AdminLoginResponse{}, err
+		return models.UserLoginResponse{}, err
 	}
 
 	m := make(map[interface{}]interface{})
-	m["user_id"] = admin.ID
-	m["user_role"] = "admin"
+	m["user_id"] = user.ID
+	m["user_role"] = "user"
 
 	accessToken, refreshToken, err := jwt.GenerateJWT(m)
 	if err != nil {
 		a.log.Error("error while generate jwt token", logger.Error(err))
-		return models.AdminLoginResponse{}, err
+		return models.UserLoginResponse{}, err
 	}
 
-	return models.AdminLoginResponse{
+	return models.UserLoginResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil

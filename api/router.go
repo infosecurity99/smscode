@@ -33,7 +33,7 @@ func New(services service.IServiceManager, log logger.ILogger) *gin.Engine {
 
 	{
 		// auth endpoints
-		r.POST("/auth/admin/login", h.AdminLogin)
+		r.POST("/auth/admin/login", h.UserLogin)
 
 		// user endpoints
 		r.POST("/user", h.CreateUser)

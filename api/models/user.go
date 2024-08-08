@@ -19,9 +19,6 @@ type CreateUser struct {
 	FullName string `json:"full_name"`
 	Phone    string `json:"phone"`
 	Password string `json:"password"`
-	Cash     uint   `json:"cash"`
-	UserType string `json:"user_type"`
-	BranchID string `json:"branch_id"`
 	Login    string `json:"login"`
 }
 
@@ -29,7 +26,6 @@ type UpdateUser struct {
 	ID       string `json:"-"`
 	FullName string `json:"full_name"`
 	Phone    string `json:"phone"`
-	Cash     uint   `json:"cash"`
 }
 
 type UsersResponse struct {
@@ -43,9 +39,3 @@ type UpdateUserPassword struct {
 	OldPassword string `json:"old_password"`
 }
 
-type UserSell struct {
-	FullName string `json:"full_name"`
-	Phone    string `json:"phone"`
-	Password string `json:"password"`
-	Cash     uint   `json:"cash"`
-}
